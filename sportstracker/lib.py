@@ -6,7 +6,7 @@ API_URL = 'https://www.sports-tracker.com/apiserver/v1'
 API_LOGIN_URL = "{}/login".format(API_URL)
 API_IMPORT_URL = "{}/workout/importGpx".format(API_URL)
 API_COMMIT_URL = "{}/workouts/header".format(API_URL)
-API_FETCH_URL = "{}/workouts?sortonst=true&limit=10&offset=0".format(API_URL)
+API_FETCH_URL = "{}/workouts?sortonst=true&limit={{}}&offset={{}}".format(API_URL)
 
 class SportsTrackerLib:
 
@@ -45,13 +45,13 @@ class SportsTrackerLib:
 		if resp.status_code == 200:
 			logging.info('Successfully added to SportsTracker')
 
-	def get_workouts(self):
+	def get_workouts(self, limit=10, offset=0):
 		""" Retrieves list of latest users workouts"""
 
 		headers = {
 			'STTAuthorization': self.token
 		}
-		resp = requests.get(API_FETCH_URL, headers=headers)
+		resp = requests.get(API_FETCH_URL.format(limit, offset), headers=headers)
 
 		return resp.json()['payload'] 
 		
