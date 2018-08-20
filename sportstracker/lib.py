@@ -28,7 +28,7 @@ class SportsTrackerLib:
 			raise Exception("Login failed")
 
 
-	def add_workout(self, name, gpx, description=''):
+	def add_workout(self, name, gpx, sportId=1, description=''):
 		""" Adds workout to system """
 
 		# Upload GPX file
@@ -36,7 +36,7 @@ class SportsTrackerLib:
 			'STTAuthorization': self.token
 		}
 		resp = requests.post(API_IMPORT_URL, headers=headers, files=[('file', (name, gpx, 'application/gpx+xml'))])
-		workout_header = WorkoutHeader(resp.json()['payload'], description)
+		workout_header = WorkoutHeader(resp.json()['payload'], sportId, description)
 		logging.debug('Workout key was obtained: ' + workout_header.workoutKey)
 		
 		# Commit workout
@@ -60,16 +60,18 @@ class WorkoutHeader:
 
 	""" Represents temporary workout object before commiting it to SportsTracker """
 
-	def __init__(self, data, description):
+	def __init__(self, data, sportId, description):
 		self.data = dict()
 
 		fields = (
-			'activityId', 'energyConsumption', 'startTime',
+			'energyConsumption', 'startTime',
 			'totalDistance', 'totalTime', 'workoutKey'
 		)
 		
 		for f in fields:
 			self.data[f] = data[f]
+
+		self.data['activityId'] = str(sportId)
 		self.data['sharingFlags'] = '17'
 		self.data['description'] = description
 	
