@@ -2,7 +2,7 @@ import requests
 import json
 import logging
 
-API_URL = 'https://www.sports-tracker.com/apiserver/v1'
+API_URL = 'https://api.sports-tracker.com/apiserver/v1'
 API_LOGIN_URL = "{}/login".format(API_URL)
 API_IMPORT_URL = "{}/workout/importGpx".format(API_URL)
 API_COMMIT_URL = "{}/workouts/header".format(API_URL)
